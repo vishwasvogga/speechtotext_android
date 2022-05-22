@@ -2,6 +2,10 @@ package com.coshel.commander;
 
 import android.util.Log;
 
+/**
+ * Wrapper on Log
+ * Shows logs only in debug mode
+ */
 public class CLog {
     private static final CLog ourInstance = new CLog();
 

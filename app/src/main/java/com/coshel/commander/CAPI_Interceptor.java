@@ -8,6 +8,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+/**
+ * This class is used to intercept all http connections
+ */
 public class CAPI_Interceptor implements Interceptor {
     final String tag = "CAPI_Interceptor";
     final CLog _log = CLog.getInstance();

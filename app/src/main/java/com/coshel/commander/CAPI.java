@@ -10,6 +10,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * THis class is used to connect with server
+ */
 public class CAPI {
     private static final CAPI ourInstance = new CAPI();
 
@@ -32,7 +35,7 @@ public class CAPI {
      */
     public Request.Builder getRequestBuilderForSpeechReco(){
         //httpBuilder = HttpUrl.parse("https://api.wit.ai/speech").newBuilder(); //Testing by hitting wit directly, you need to change the auth token accordingly
-        httpBuilder = HttpUrl.parse("http://192.168.225.64:3001/api/v1/audio/file/submit").newBuilder();
+        httpBuilder = HttpUrl.parse(CConfig.getInstance().serverEndpoint+"/api/v1/audio/file/submit").newBuilder();
         httpRequestBuilder = new Request.Builder()
                 .url(httpBuilder.build())
                 .header("Authorization", "Basic RilKQE5jUmZValhuMnI1dTplVGhWbVlxM3Q2dzl6JEMmRilKQE5jUmZValhuWnI0dQ=")

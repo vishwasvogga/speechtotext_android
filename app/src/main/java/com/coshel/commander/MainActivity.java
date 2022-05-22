@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements CAudioRecorderInterface {
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements CAudioRecorderInt
         initialiseuUi();
         //initialise UI controls
         initialiseUiControls();
+        //initialise TTS
+        CTTs.getInstance().init(this);
     }
 
     @Override
@@ -135,5 +139,17 @@ public class MainActivity extends AppCompatActivity implements CAudioRecorderInt
     @Override
     public void speechRecognisionResponse(CBasicResponse response) {
         CLog.getInstance().v(TAG,response.toString());
+        try{
+            JSONObject obj = CReplyToAction.getInstance().getReplyFromAction(response.data.getString("name"));
+            if(obj.getString("type")=="tts"){
+                String text = obj.getString("text");
+                String id =  obj.getString("id");
+                CTTs.getInstance().speak(text,id);
+            }
+            CLog.getInstance().e(TAG,obj.toString());
+        }catch (Exception e){
+            CLog.getInstance().e(TAG,e.toString());
+        }
+
     }
 }

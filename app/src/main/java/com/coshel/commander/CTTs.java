@@ -5,6 +5,9 @@ import android.speech.tts.TextToSpeech;
 
 import java.util.Locale;
 
+/**
+ * This class helps in converting text to speech
+ */
 public class CTTs implements TextToSpeech.OnInitListener  {
     private static final CTTs ourInstance = new CTTs();
 
@@ -18,16 +21,33 @@ public class CTTs implements TextToSpeech.OnInitListener  {
     TextToSpeech tts;
     Boolean isOkay=false;
 
+    /**
+     * Initialse
+     * @param context context
+     */
     void init(Context context){
         tts = new TextToSpeech(context, this);
     }
 
 
+    /**
+     * Clear tts obj
+     */
     void destroy(){
         if(tts != null){
             tts.stop();
             tts.shutdown();
         }
+    }
+
+
+    /**
+     * Convert text to speech
+     * @param text text which is to be converted to speech
+     * @param id id
+     */
+    void speak(String text,String id){
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null,id);
     }
 
 

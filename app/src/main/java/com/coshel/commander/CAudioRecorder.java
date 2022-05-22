@@ -22,9 +22,16 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSink;
 
+/**
+ * This class is used to capture the audio
+ */
 public class CAudioRecorder {
     private static final CAudioRecorder ourInstance = new CAudioRecorder();
 
+    /**
+     * Get singleton instance
+     * @return CAudioRecorder
+     */
     public static CAudioRecorder getInstance() {
         return ourInstance;
     }
@@ -45,10 +52,19 @@ public class CAudioRecorder {
     private CAudioRecorderInterface cAudioRecorderInterface = null;
 
 
+    /**
+     * Get to know if recording is on progress
+     * @return AtomicBoolean
+     */
     AtomicBoolean isRecordingInProgress() {
         return recordingInProgress;
     }
 
+    /**
+     * Start recording
+     * @param context context
+     * @param _cAudioRecorderInterface CAudioRecorderInterface to get the updates from server
+     */
     public void startRecording(Context context,CAudioRecorderInterface _cAudioRecorderInterface) {
         if (ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
             _log.v(tag,"Recording started"+" Buffer size is "+BUFFER_SIZE);
@@ -64,6 +80,9 @@ public class CAudioRecorder {
         }
     }
 
+    /**
+     * Stop recording
+     */
     public void stopRecording() {
         if (recorder == null) return;
 
@@ -75,6 +94,9 @@ public class CAudioRecorder {
         recordingThread = null;
     }
 
+    /**
+     * Destroy the recorder obj and thread
+     */
     public void destroy(){
         if(recorder != null){
             recorder.stop();
