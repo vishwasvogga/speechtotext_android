@@ -12,17 +12,22 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity implements CAudioRecorderInterface {
 
     Button btnRecorder;
+    TextView txtUtter;
     final String TAG="Main activity";
     int retryAudioPermissionLimit=3;
     boolean isSpeakButtonLongPressed= false;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements CAudioRecorderInt
     void initialiseuUi(){
         //get record button refrence
         btnRecorder=findViewById(R.id.btn_recordAudio);
+        txtUtter = findViewById(R.id.text_show_utter);
+        spinner = findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.GONE);
     }
 
     //check audio permission
@@ -105,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements CAudioRecorderInt
                     CAudioRecorder.getInstance().startRecording(MainActivity.this,MainActivity.this);
                     btnRecorder.setText(R.string.release_to_record);
                     btnRecorder.setTextColor(getResources().getColor(R.color.colorAccent));
+                    txtUtter.setText("");
+                    spinner.setVisibility(View.VISIBLE);
                 }
                 return true;
             }
@@ -124,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements CAudioRecorderInt
                         CAudioRecorder.getInstance().stopRecording();
                         btnRecorder.setText(R.string.start_record);
                         btnRecorder.setTextColor(getResources().getColor(R.color.dark));
+                        btnRecorder.setEnabled(false);
                     }
                 }
                 return false;
@@ -140,16 +151,38 @@ public class MainActivity extends AppCompatActivity implements CAudioRecorderInt
     public void speechRecognisionResponse(CBasicResponse response) {
         CLog.getInstance().v(TAG,response.toString());
         try{
-            JSONObject obj = CReplyToAction.getInstance().getReplyFromAction(response.data.getString("name"));
+            JSONObject obj = CReplyToAction.getInstance().getReplyFromAction(response.data.getString("name"),response.data.getString("text"));
             if(obj.getString("type")=="tts"){
                 String text = obj.getString("text");
                 String id =  obj.getString("id");
+                //convert to text to speech
                 CTTs.getInstance().speak(text,id);
+                //display the text uttered
+                displayUtteredWords(obj.getString("utter"));
             }
             CLog.getInstance().e(TAG,obj.toString());
         }catch (Exception e){
             CLog.getInstance().e(TAG,e.toString());
         }
 
+    }
+
+    /**
+     * This method is used to show the uttered text on screen
+     * @param utter string
+     */
+    public void displayUtteredWords(String utter){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                spinner.setVisibility(View.GONE);
+                btnRecorder.setEnabled(true);
+                if(utter == null || utter == ""){
+                    txtUtter.setText("Not recognised");
+                }else{
+                    txtUtter.setText(utter);
+                }
+            }
+        });
     }
 }

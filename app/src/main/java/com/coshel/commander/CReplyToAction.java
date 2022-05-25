@@ -35,14 +35,17 @@ public class CReplyToAction {
      * @return JSONObject [id,text,type("tts")]
      * @throws JSONException
      */
-    JSONObject getReplyFromAction(String action) throws JSONException {
+    JSONObject getReplyFromAction(String action,String utter) throws JSONException {
         JSONObject obj = new JSONObject();
         //Random ID
         String id= String.valueOf(getRandomNumber(0,10000)) ;
         obj.put("id",id);
+        if(utter != null){
+            obj.put("utter",utter);
+        }
 
         switch (action){
-            case "tell_time" : obj.put("text",getTime());obj.put("type","tts"); break;
+            case "tell_time" : obj.put("text",getTime());obj.put("type","tts");obj.put("type","tts"); break;
             default:obj.put("text","I could not recognise, please try again");obj.put("type","tts");break;
         }
 

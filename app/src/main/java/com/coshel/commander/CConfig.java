@@ -14,5 +14,6 @@ public class CConfig {
     }
 
     //Server endpoint for speech recognition
-    String serverEndpoint = "http://192.168.225.64:3001";
+   // String serverEndpoint = "http://192.168.225.64:3001";
+    String serverEndpoint = "https://api.algo.coshel.co.in/tts-demo";
 }

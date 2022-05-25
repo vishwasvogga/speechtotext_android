@@ -127,7 +127,7 @@ public class CAudioRecorder {
 
                 @Override
                 public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
-                    _log.d(tag,"Fetching bytes");
+                    _log.v(tag,"Fetching bytes");
                     while (recordingInProgress.get()) {
 
                         int result = recorder.read(buffer, BUFFER_SIZE);
@@ -144,11 +144,11 @@ public class CAudioRecorder {
             //send the request to endpoint
             Request request = CAPI.getInstance().getRequestBuilderForSpeechReco().post(requestBody).build();
             try{
-                _log.d(tag,"Creating request");
+                _log.v(tag,"Creating request");
                 Response response = CAPI.getInstance().getHttpClient().newCall(request).execute();
                 if (response.isSuccessful()) {
                     String responseData = response.body().string();
-                    _log.v("Streaming Response", responseData);
+                    _log.d(tag, responseData);
                     //send response to main thread
                     if(cAudioRecorderInterface != null){
                         CBasicResponse basicResponse = new CBasicResponse();
